@@ -1,3 +1,0 @@
-/home/dando/Desktop/Prova Clion/nuovo/cmake-build-debug/CMakeFiles/nuovo.dir
-/home/dando/Desktop/Prova Clion/nuovo/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/dando/Desktop/Prova Clion/nuovo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
