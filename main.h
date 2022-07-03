@@ -28,6 +28,13 @@ typedef struct {
 } ProfiloGiocatore;
 
 
+typedef struct {
+    int id;
+    bool vivo;
+    ProfiloGiocatore *p;
+} Elenco;
+
+
 
 
 

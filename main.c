@@ -7,17 +7,18 @@ int main() {
 
 
     //TESTING
-    int i, j, d;
+    int i, j, k;
     char f;
 
     int numero_giocatori, numero_giocatori_veri;
-    int *giocatori = NULL;
+    Elenco *giocatori = NULL;
     bool *giocatori_vivi = NULL;
     ProfiloGiocatore *giocatori_veri;
     FILE *file = NULL;
 
-    bool nuovo;
+    bool nuovo, esistente;
     int scelta, prosegui;
+    char nome[30];
     char opzioni[2][10] = {"carica", "inserisci"};
     char scelte[4][10] = {"continua", "salva", "inizia", "esci"};
     char filename[31] = "savegame_twoPlayers_noGame.bin\0";
@@ -26,6 +27,7 @@ int main() {
     int numero_profili;
 
     int id;
+    bool *gia_scelti = NULL;
 
 
 
@@ -37,8 +39,10 @@ int main() {
     //carica una partita o inserisci un nuovo profilo giocatore
     //se inserisci il profilo, mettine un altro o salva / inizia / esci
 
+    // carica o inserisci
     nuovo = (bool)choice_string("\nCosa vuoi fare? (carica / inserisci)\n[Tu]: ", 2, opzioni);
 
+    // se sceglie di inserire un nuovo profilo
     if(nuovo) {
 
         numero_profili = 1;
@@ -47,9 +51,24 @@ int main() {
         do {
             giocatori_veri = (ProfiloGiocatore *) realloc(giocatori_veri, sizeof(ProfiloGiocatore) * numero_profili);   // rivedere, fa un passaggio inutile
 
-            printf("\nNome: ");
-            // debugga questa parte, il nome deve essere univoco
-            scanf (" %[^\n]%*c", giocatori_veri[numero_profili - 1].nome);
+            do {
+                esistente = false;
+
+                printf("\nNome: ");
+                scanf (" %[^\n]%*c", nome);
+
+                for(i = 0; i < numero_profili; i++) {
+                    if(strcmp(giocatori_veri[i].nome, nome) == 0) {
+                        esistente = true;
+                        printf("\n\nHai gia' inserito questo nome\n\n");
+                        break;
+                    }
+                }
+
+                strcpy(giocatori_veri[numero_profili - 1].nome, nome);
+
+
+            } while(esistente == true);
 
             prosegui = choice_string("\nScegli l'operazione: (continua / salva / inizia / esci)\n[Tu]: ", 4, scelte);
 
@@ -66,6 +85,7 @@ int main() {
                 //finire
                 break;
             case 2:
+                // aggiungere un messaggio di inizio
                 break;
             case 3:
                 printf("\nBene, allora alla prossima!");
@@ -75,10 +95,11 @@ int main() {
                 break;
         }
 
+        // per caricare da un file esistente
     } else {
         // parte dal presupposto che il file sia già stato scelto, da cambiare in futuro
         // inoltre non legge se la partita è in corso
-        file_path = make_path(filename, "");
+        /*file_path = make_path(filename, "");
 
 
         file = fopen(file_path, "rb");
@@ -97,7 +118,7 @@ int main() {
         }
 
 
-        fclose(file);
+        fclose(file);*/
     }
 
 
@@ -106,40 +127,47 @@ int main() {
 
     numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 999);
 
-    giocatori = (int *) calloc(numero_giocatori, sizeof(int));
-    giocatori_vivi = (bool *) calloc(numero_giocatori, sizeof(bool));
+    giocatori = (Elenco *) calloc(numero_giocatori, sizeof(Elenco));
 
-    if(giocatori == NULL || giocatori_vivi == NULL) {
+    if(giocatori == NULL) {
         printf("\nERRORE! Allocazione fallita!\n");
         exit(-1);
     }
 
     for(i = 0; i < numero_giocatori; i++) {
-        giocatori[i] = i;
-        giocatori_vivi[i] = true;
+        giocatori[i].id = i;
+        giocatori[i].p = NULL;
+        giocatori[i].vivo = true;
     }
 
 
-    numero_giocatori_veri = get_int("\n\nQuanti di questi profini vuoi usare: ", 0, numero_profili);
+    /*printf("\n\nQuanti di questi %d profini vuoi usare: ", numero_profili);
+    numero_giocatori_veri = get_int("", 0, numero_profili);
 
+
+    // scelta del profilo al quale assegnare il giusto indice
     for(i = 0; i < numero_giocatori_veri; i++) {
-        printf("\nScegli un profilo: ");
-        for(j = 0; j < numero_profili; j++) {
-            printf("\n[%d]: %s", j, giocatori_veri[j].nome);
-        }
-        // debuggare la scelta, per evitare che scelga due volte lo stesso
-        // e togli quelli già scelti dalla lista
-        scelta = get_int("\n\nScelta: ", 0, numero_profili);
 
-        printf("\nE quale id avra' %s?", giocatori_veri[scelta].nome);
-        id = get_int("\nId: ", 0, numero_giocatori - 1);
+        // il giocatore seleziona i profili da usare e gli assegna un id
+        // code
+    }*/
 
-        giocatori[id] = -(id + 1);
-    }
+
+
 
     printf("\n\n");
     for(i = 0; i < numero_giocatori; i++) {
-        printf("\nGiocatore: %d", giocatori[i]);
+        printf("\n[%d] -> ", giocatori[i].id);
+        if(giocatori[i].p == NULL) {
+            printf("CPU");
+        } else {
+            printf("%s", giocatori[i].p->nome);
+        }
+        if(giocatori[i].vivo == true) {
+            printf(" <vivo>");
+        } else {
+            printf(" <morto>");
+        }
     }
 
 
