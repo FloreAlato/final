@@ -19,8 +19,6 @@ int main() {
     char nome[30];
     char opzioni[2][10] = {"carica", "inserisci"};
     char scelte[4][10] = {"continua", "salva", "inizia", "esci"};
-    char filename[32];
-    char *file_path = NULL;
     char **files = NULL;
     int numero_files;
     int numero_profili;
@@ -83,7 +81,7 @@ int main() {
                 //finire
                 break;
             case 2:
-                // aggiungere un messaggio di inizio
+                printf("\nALLORA COMINCIAMO!!!!!\n");
                 break;
             case 3:
                 printf("\nBene, allora alla prossima!");
@@ -97,9 +95,9 @@ int main() {
     } else {
 
         // cominciamo
-        printf("\nQuesti sono i file disponibili:");
+        printf("\nQuesti sono i file disponibili:\n");
 
-        file = fopen("../cmake-build-debug/Save_Files/savegame_files.bin", "rb");
+        file = fopen(make_path("savegame_files", ".bin"), "rb");
         if(file == NULL) {
             printf("\n\nERRORE! Impossibile aprire file!");
             exit(-1);
@@ -130,6 +128,24 @@ int main() {
         }
 
         // scegliere il file e recuperare le info
+        scelta = get_int("\n\n[Tu]: ", 0, numero_files - 1);
+
+        file = fopen(make_path(files[scelta], ".bin"), "rb");
+        if(file == NULL) {
+            printf("\n\nERRORE! Impossibile aprire file!");
+            exit(-1);
+        }
+
+        fread(&numero_profili, sizeof(int), 1, file);
+
+        giocatori_veri = (ProfiloGiocatore *) calloc(sizeof(ProfiloGiocatore), numero_profili);
+
+        leggi_giocatori(file, numero_profili, giocatori_veri);
+
+        fclose(file);
+
+
+        // finire, se la partita e' iniziata bisognera' agire di conseguenza
 
 
         free(files);

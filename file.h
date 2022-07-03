@@ -16,32 +16,6 @@
 
 
 
-void list_files() {
-
-    FILE *file = NULL;
-    char filename[40];
-
-    file = fopen("../cmake-build-debug/Save_Files/savegame_files.txt", "r");
-
-    if(file == NULL) {
-        printf("\nERRORE! Il file non e' stato trovato!\n");
-        return;
-    }
-
-    while(feof(file) == 0) {
-        fgets(filename, 39, file);
-        printf("File: %s", filename);
-    }
-
-    fclose(file);
-}
-
-
-
-
-
-
-
 
 
 void leggi_giocatori(FILE *file, int num, ProfiloGiocatore *player) {
@@ -126,34 +100,4 @@ char *make_path(char filename[], char extention[]) {
     return path;
 }
 
-
-
-
-
-
-void get_filenames() {
-
-    char n;
-    int num;
-    char **filenames = NULL;
-    FILE *file = NULL;
-
-    file = fopen("../cmake-build-debug/Save_Files/savegame_files.txt", "r");
-    if(file == NULL) {
-        printf("\n\nERRORE! Impossibile aorire file!");
-        exit(-1);
-    }
-
-    fread(&n, sizeof(char), 1, file);
-    num = string_to_int(&n);
-
-    printf("\n\n%d", num);
-
-
-    //code
-
-
-
-    fclose(file);
-}
 
