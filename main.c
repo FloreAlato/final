@@ -1,6 +1,9 @@
 #include "file.h"
 
 
+void scrematura(Elenco *);
+
+
 
 int main() {
 
@@ -155,7 +158,7 @@ int main() {
 
     // INIZIO PARTITA
 
-    numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 999);
+    numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 1000);
 
     giocatori = (Elenco *) calloc(numero_giocatori, sizeof(Elenco));
 
@@ -179,8 +182,7 @@ int main() {
     for(j = 0; j < numero_giocatori_veri; j++) {
 
 
-        // debuggare questa parte, e' ancora possibile scegliere lo stesso profilo due volte
-        // inoltre li stampa tutti ogni volta
+        // stampa ancora tutti i profili, da correggere
 
         printf("\nProfili a disposizione:");
 
@@ -188,6 +190,8 @@ int main() {
 
             printf("\n[%d] -> %s", i, giocatori_veri[i].nome);
         }
+
+        // debuggare questa parte, lascia scegliere due volte lo stesso profilo
 
         scelta = get_int("\n\n[Tu]: ", 0, numero_giocatori_veri);
 
@@ -217,12 +221,10 @@ int main() {
 
     printf("\n\n");
     for(i = 0; i < numero_giocatori; i++) {
-        printf("\n[%d] -> ", giocatori[i].id);
-        if(giocatori[i].p == NULL) {
-            printf("CPU");
-        } else {
-            printf("%s", giocatori[i].p->nome);
-        }
+        printf("\n[");
+        print_player(giocatori[i]);
+        printf("] -> ");
+
         if(giocatori[i].vivo == true) {
             printf(" <vivo>");
         } else {
@@ -284,4 +286,13 @@ int main() {
 
 
 
+
+
+
+
+void scrematura(Elenco *giocatori) {
+
+    // ridurre il numero dei giocatori
+
+}
 

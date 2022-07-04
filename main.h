@@ -214,37 +214,27 @@ int choice_string(char *query, int num, char options[num][10]) {
 
 
 
-char *print_player(int num, ProfiloGiocatore *players) {
+void print_player(Elenco player) {
 
-    //rimuove il controllo giocatore
-    int player = num;
-    if(player < 0) {
-        return players[player].nome;
-    }
-
-    //alloca dinamicamente una stringa per poterla restituire
-    char *name = NULL;
-
-    name = (char *)malloc(sizeof(char) * 4);
-    if(name == NULL) {
-        return "nul\0";
-    }
-
-    name[0] = name[1] = name[2] = '0';
-    name[3] = '\0';
-
-
-    //assegna ad ogni carattere della stringa le rispettive cifre tramite divisioni, resti, e conversione ascii
-    if(player > 99) {
-        name[0] = (char)((player / 100) + 48);
-        name[1] = (char)(((player % 100) / 10) + 48);
-        name[2] = (char)(((player % 100) % 10) + 48);
-    } else if(player > 9) {
-        name[1] = (char)((player / 10) + 48);
-        name[2] = (char)((player % 10) + 48);
+    //riscrivere da zero
+    if(player.p != NULL) {
+        printf("%s", player.p->nome);
     } else {
-        name[2] = (char)(player + 48);
+        // converti in stringa
+        int powers[3] = {100, 10, 1};
+        int num = player.id;
+        for(int i = 0; i < 3; i++) {
+            printf("%d", num / powers[i]);
+            num %= powers[i];
+        }
     }
+}
 
-    return name;
+
+bool is_player(Elenco player) {
+    if(player.p == NULL) {
+        return false;
+    } else {
+        return true;
+    }
 }
