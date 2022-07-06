@@ -27,6 +27,7 @@ int main() {
     int numero_profili;
 
     int id;
+    Elenco *prov = NULL;
 
 
 
@@ -64,7 +65,14 @@ int main() {
                     }
                 }
 
+                // azzera tutti i valori del giocatore e assegna il nome
                 strcpy(giocatori_veri[numero_profili - 1].nome, nome);
+                giocatori_veri[numero_profili - 1].index = 0;
+                giocatori_veri[numero_profili - 1].spr1d_game_giocati = 0;
+                giocatori_veri[numero_profili - 1].spr1d_game_vinti = 0;
+                giocatori_veri[numero_profili - 1].finali_giocate = 0;
+                giocatori_veri[numero_profili - 1].giochi_giocati = 0;
+                giocatori_veri[numero_profili - 1].giochi_vinti = 0;
 
 
             } while(esistente == true);
@@ -156,6 +164,8 @@ int main() {
 
 
 
+
+
     // INIZIO PARTITA
 
     numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 1000);
@@ -177,9 +187,23 @@ int main() {
     printf("\n\nQuanti di questi %d profini vuoi usare: ", numero_profili);
     numero_giocatori_veri = get_int("", 0, numero_profili);
 
+    prov = (Elenco *) calloc(sizeof(Elenco), numero_profili);
+    if(prov == NULL) {
+        printf("\nERRORE! Allocazione fallita!\n");
+        exit(-1);
+    }
+
+    for(k = 0; k < numero_profili; k++) {
+        prov[k].id = k;
+        prov[k].p = &giocatori_veri[k];
+    }
+
 
     // scelta del profilo al quale assegnare il giusto indice
     for(j = 0; j < numero_giocatori_veri; j++) {
+
+
+
 
 
         // stampa ancora tutti i profili, da correggere
@@ -188,17 +212,30 @@ int main() {
 
         for(i = 0; i < numero_profili; i++) {
 
-            printf("\n[%d] -> %s", i, giocatori_veri[i].nome);
+            if(prov[i].p != NULL) {
+                printf("\n[%d] -> %s", i, prov[i].p->nome);
+            }
         }
 
-        // debuggare questa parte, lascia scegliere due volte lo stesso profilo
 
-        scelta = get_int("\n\n[Tu]: ", 0, numero_giocatori_veri);
+
+
+        // deebuggato, non puoi scegliere due volte lo stesso profilo
+
+        do {
+            scelta = get_int("\n\n[Tu]: ", 0, numero_giocatori_veri);
+            if(prov[scelta].p == NULL) {
+                printf("\nQuesto giocatore e' gia' stato scelto!");
+            }
+        } while(prov[scelta].p == NULL);
+
+
+
 
         // debuggato, non puoi inserire lo stesso id per due profili
         do {
             scelto = false;
-            printf("\nId di %s: ", giocatori_veri[scelta].nome);
+            printf("\nId di %s: ", prov[scelta].p->nome);
             id = get_int("", 0, numero_giocatori);
             if(giocatori[id].p == NULL) {
                 giocatori_veri[scelta].index = id;
@@ -208,7 +245,11 @@ int main() {
                 scelto = true;
             }
         } while(scelto == true);
+
+        prov[scelta].p = NULL;
     }
+
+    free(prov);
 
 
 
