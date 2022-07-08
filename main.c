@@ -17,7 +17,7 @@ int main() {
     ProfiloGiocatore *giocatori_veri;
     FILE *file = NULL;
 
-    bool nuovo, esistente, scelto;
+    bool nuovo, esistente, scelto, game = false;
     int scelta, prosegui;
     char nome[30];
     char opzioni[2][10] = {"carica", "inserisci"};
@@ -28,6 +28,10 @@ int main() {
 
     int id;
     Elenco *prov = NULL;
+
+    // variabili utili se la partita è iniziata
+    int *indici = NULL;
+    int *vivi = NULL;
 
 
 
@@ -153,10 +157,19 @@ int main() {
 
         leggi_giocatori(file, numero_profili, giocatori_veri);
 
+        // leggi se la partita esiste
+        fread(&game, sizeof(int), 1, file);
+
+        if(game == true) {
+            // cosa accade se il gioco e' iniziato?
+
+            fread(&numero_giocatori, sizeof(char), 1, file);
+            fread(&numero_giocatori_veri, sizeof(int), 1, file);
+
+            // riempire le array richieste nelle specifiche
+        }
+
         fclose(file);
-
-
-        // finire, se la partita e' iniziata bisognera' agire di conseguenza
 
 
         free(files);
@@ -203,10 +216,7 @@ int main() {
     for(j = 0; j < numero_giocatori_veri; j++) {
 
 
-
-
-
-        // stampa ancora tutti i profili, da correggere
+        // debuggato, lascia stampa solo i profili non ancora scelti
 
         printf("\nProfili a disposizione:");
 
@@ -218,8 +228,6 @@ int main() {
         }
 
 
-
-
         // deebuggato, non puoi scegliere due volte lo stesso profilo
 
         do {
@@ -228,8 +236,6 @@ int main() {
                 printf("\nQuesto giocatore e' gia' stato scelto!");
             }
         } while(prov[scelta].p == NULL);
-
-
 
 
         // debuggato, non puoi inserire lo stesso id per due profili
@@ -328,12 +334,4 @@ int main() {
 
 
 
-
-
-
-void scrematura(Elenco *giocatori) {
-
-    // ridurre il numero dei giocatori
-
-}
 
