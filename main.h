@@ -238,3 +238,41 @@ bool is_player(Elenco player) {
         return true;
     }
 }
+
+
+
+void stampa_lista_giocatori(Elenco *giocatori, int quanti) {
+
+    printf("\n\n");
+    for(int i = 0; i < quanti; i++) {
+        printf("\n[");
+        print_player(giocatori[i]);
+        printf("] -> ");
+
+        if(giocatori[i].vivo == true) {
+            printf(" <vivo>");
+        } else {
+            printf(" <morto>");
+        }
+    }
+}
+
+
+
+Elenco *componi_elenco(int numero_giocatori) {
+
+    Elenco *players = (Elenco *) calloc(numero_giocatori, sizeof(Elenco));
+
+    if(players == NULL) {
+        printf("\nERRORE! Allocazione fallita!\n");
+        exit(-1);
+    }
+
+    for(int i = 0; i < numero_giocatori; i++) {
+        players[i].id = i;
+        players[i].p = NULL;
+        players[i].vivo = true;
+    }
+
+    return players;
+}
