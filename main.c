@@ -238,19 +238,41 @@ int main() {
 
         fread(&game, sizeof(int), 1, file);
 
-        if(game == true) {
-            // finire la descrizione
+        // se il file contiene una partita già in corso, le seguenti operazioni vengono svolte:
 
-            fread(&numero_giocatori, sizeof(char), 1, file);
+        if(game == true) {
+
+            // si leggono dal file il numero di giocatori totali e utente partecipanti alla partita
+
+            fread(&numero_giocatori, sizeof(int), 1, file);
             fread(&numero_giocatori_veri, sizeof(int), 1, file);
 
-            // riempie la lista dei giocatori
+            // l'array dei giocatori totali viene riempita grazie all'apposita funzione componi_elenco()
+            // in questo modo, i campi vivo e p sono inizializzati a true e NULL
+            // questo ci semplificherà le cose più tardi
+            // componi_elenco() -> main.h
+
             giocatori = componi_elenco(numero_giocatori);
 
+            // una volta fatto ciò, vengono abbinati i posti nella lista totale dei giocatori ai giusti profili
+            // questo viene fatto recuperando l'indice del profilo giocatore indicato
 
-            for(k = 0; k < numero_giocatori_veri; k++) {
-                // mettere i giocatori al posto giusto
-                // rileggere la consegna
+            for(j = 0; j < numero_giocatori_veri; j++) {
+
+                fread(&segnaposto, sizeof(int), 1, file);
+                giocatori[giocatori_veri[segnaposto].index].p = &giocatori_veri[segnaposto];
+            }
+
+            // come ultimo passaggio, il programma recupera dal file l'array dello "stato vitale" dei giocatori
+            // e lo salva nell'elenco correggendo il valore del campo vivo
+            // basta correggere il valore per i giocatori morti, in quanto sono tutti vivi di default
+
+            for(j = 0; j < numero_giocatori; j++) {
+
+                fread(&segnaposto, sizeof(int), 1, file);
+                if(segnaposto == 0) {
+                    giocatori[j].vivo = false;
+                }
             }
         }
 
@@ -265,74 +287,82 @@ int main() {
 
 
 
-    // INIZIO PARTITA (correggere con un if game == false)
 
-    numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 1000);
-
-    // riempie la lista dei giocatori
-    giocatori = componi_elenco(numero_giocatori);
+    // INIZIO PARTITA
 
 
-    printf("\n\nQuanti di questi %d profini vuoi usare: ", numero_profili);
-    numero_giocatori_veri = get_int("", 0, numero_profili);
 
-    prov = (Elenco *) calloc(sizeof(Elenco), numero_profili);
-    if(prov == NULL) {
-        printf("\nERRORE! Allocazione fallita!\n");
-        exit(-1);
-    }
+    // commentare
 
-    for(k = 0; k < numero_profili; k++) {
-        prov[k].id = k;
-        prov[k].p = &giocatori_veri[k];
-    }
+    if(game == false) {
+
+        numero_giocatori = get_int("\n\nNumero giocatori: ", 16, 1000);
+
+        // riempie la lista dei giocatori
+        giocatori = componi_elenco(numero_giocatori);
 
 
-    // scelta del profilo al quale assegnare il giusto indice
-    for(j = 0; j < numero_giocatori_veri; j++) {
+        printf("\n\nQuanti di questi %d profini vuoi usare: ", numero_profili);
+        numero_giocatori_veri = get_int("", 0, numero_profili);
 
+        prov = (Elenco *) calloc(sizeof(Elenco), numero_profili);
+        if(prov == NULL) {
+            printf("\nERRORE! Allocazione fallita!\n");
+            exit(-1);
+        }
 
-        // debuggato, lascia stampa solo i profili non ancora scelti
-
-        printf("\nProfili a disposizione:");
-
-        for(i = 0; i < numero_profili; i++) {
-
-            if(prov[i].p != NULL) {
-                printf("\n[%d] -> %s", i, prov[i].p->nome);
-            }
+        for(k = 0; k < numero_profili; k++) {
+            prov[k].id = k;
+            prov[k].p = &giocatori_veri[k];
         }
 
 
-        // deebuggato, non puoi scegliere due volte lo stesso profilo
+        // scelta del profilo al quale assegnare il giusto indice
+        for(j = 0; j < numero_giocatori_veri; j++) {
 
-        do {
-            scelta = get_int("\n\n[Tu]: ", 0, numero_giocatori_veri);
-            if(prov[scelta].p == NULL) {
-                printf("\nQuesto giocatore e' gia' stato scelto!");
+
+            // debuggato, lascia stampa solo i profili non ancora scelti
+
+            printf("\nProfili a disposizione:");
+
+            for(i = 0; i < numero_profili; i++) {
+
+                if(prov[i].p != NULL) {
+                    printf("\n[%d] -> %s", i, prov[i].p->nome);
+                }
             }
-        } while(prov[scelta].p == NULL);
 
 
-        // debuggato, non puoi inserire lo stesso id per due profili
+            // deebuggato, non puoi scegliere due volte lo stesso profilo
 
-        do {
-            scelto = false;
-            printf("\nId di %s: ", prov[scelta].p->nome);
-            id = get_int("", 0, numero_giocatori);
-            if(giocatori[id].p == NULL) {
-                giocatori_veri[scelta].index = id;
-                giocatori[id].p = &giocatori_veri[scelta];
-            } else {
-                printf("\nQuesto id e' gia' preso, inseriscine un altro...");
-                scelto = true;
-            }
-        } while(scelto == true);
+            do {
+                scelta = get_int("\n\n[Tu]: ", 0, numero_giocatori_veri);
+                if(prov[scelta].p == NULL) {
+                    printf("\nQuesto giocatore e' gia' stato scelto!");
+                }
+            } while(prov[scelta].p == NULL);
 
-        prov[scelta].p = NULL;
+
+            // debuggato, non puoi inserire lo stesso id per due profili
+
+            do {
+                scelto = false;
+                printf("\nId di %s: ", prov[scelta].p->nome);
+                id = get_int("", 0, numero_giocatori);
+                if(giocatori[id].p == NULL) {
+                    giocatori_veri[scelta].index = id;
+                    giocatori[id].p = &giocatori_veri[scelta];
+                } else {
+                    printf("\nQuesto id e' gia' preso, inseriscine un altro...");
+                    scelto = true;
+                }
+            } while(scelto == true);
+
+            prov[scelta].p = NULL;
+        }
+
+        free(prov);
     }
-
-    free(prov);
 
 
 

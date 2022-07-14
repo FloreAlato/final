@@ -261,7 +261,9 @@ void stampa_lista_giocatori(Elenco *giocatori, int quanti) {
 
 Elenco *componi_elenco(int numero_giocatori) {
 
-    Elenco *players = (Elenco *) calloc(numero_giocatori, sizeof(Elenco));
+    Elenco *players = NULL;
+
+    players= (Elenco *) calloc(numero_giocatori, sizeof(Elenco));
 
     if(players == NULL) {
         printf("\nERRORE! Allocazione fallita!\n");
