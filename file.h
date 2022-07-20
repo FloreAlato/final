@@ -12,6 +12,15 @@
 
 
 
+char names[4][32] = {
+        "savegame_Nplayers_game",
+        "savegame_Nplayers_noGame",
+        "savegame_twoPlayers_game",
+        "savegame_twoPlayers_noGame"
+};
+
+
+
 
 
 
@@ -31,54 +40,39 @@ void leggi_giocatori(FILE *file, int num, ProfiloGiocatore *player) {
     }
 }
 
+void scrivi_giocatori(FILE *file, int num, ProfiloGiocatore *giocatori) {
 
-
-//void leggi_file(char *filename, char *mode, )
-
-
-
-
-void scrivi_giocatori(int num, ProfiloGiocatore giocatore, FILE *file) {
-
-    fwrite(&giocatore, sizeof(ProfiloGiocatore), num, file);
-}
-
-
-
-
-void scrivi_file(int num, ProfiloGiocatore players, bool game, FILE *file) {
-
-    fwrite(&num, sizeof(int), 1, file);
-    scrivi_giocatori(num, players, file);
-    fwrite(&game, sizeof(int), 1, file);
-
-    //comtinuare in caso game sia positivo
+    for(int i = 0; i < num; i++) {
+        fwrite(&giocatori[i].index, sizeof(int), 1, file);
+        fwrite(&giocatori[i].nome, sizeof(char), 64, file);
+        fwrite(&giocatori[i].spr1d_game_giocati, sizeof(int), 1, file);
+        fwrite(&giocatori[i].spr1d_game_vinti, sizeof(int), 1, file);
+        fwrite(&giocatori[i].finali_giocate, sizeof(int), 1, file);
+        fwrite(&giocatori[i].giochi_giocati, sizeof(int), 1, file);
+        fwrite(&giocatori[i].giochi_vinti, sizeof(int), 1, file);
+    }
 }
 
 
 
 
 
-void aggiorna_lista_file(char *filename, int size, int num, bool game) {
 
-    FILE *lista = NULL;
-    lista = fopen("../cmake-build-debug/Save_Files/savegame_files.txt", "a");
-    if(lista == NULL) {
-        printf("\nERRORE! Impossibile aprire il file!\n");
+
+FILE *fopen_secure(char *filename, char *mode) {
+
+    FILE *file = NULL;
+    file = fopen(filename, mode);
+    if(file == NULL) {
+        printf("\n\nERRORE! Impossibile aprire file!");
         exit(-1);
     }
 
-    fprintf(lista, "\n");
-    fwrite(filename, sizeof(char), size, lista);
-    fprintf(lista, " (%d giocatori, ", num);
-    if(game) {
-        fprintf(lista, "partita in corso)");
-    } else {
-        fprintf(lista, "niente partita)");
-    }
-
-    fclose(lista);
+    return file;
 }
+
+
+
 
 
 
@@ -98,6 +92,119 @@ char *make_path(char filename[], char extention[]) {
     strcat(path, extention);
 
     return path;
+}
+
+
+
+
+
+
+char **list_files(FILE *file, int numero) {
+
+    char **files = NULL;
+
+    files = (char **) calloc(sizeof(char *), numero);
+    if(files == NULL) {
+        printf("\n\nERRORE! Allocazione fallita!");
+        exit(-1);
+    }
+
+    // essendo una matrice, l'allocazione avviene in due parti, usando il seguente ciclo for
+    // all'interno di questo avviene anche la lettura dei nomi dal file
+
+    for(int k = 0; k < numero; k++) {
+        files[k] = (char *) calloc(sizeof(char), 32);
+        if(files[k] == NULL) {
+            printf("\n\nERRORE! Allocazione fallita!");
+            exit(-1);
+        }
+
+        fread(files[k], sizeof(char), 32, file);
+    }
+
+    return files;
+}
+
+
+
+
+
+void save(int *profili, ProfiloGiocatore *players, bool *game, char *filename) {
+
+    FILE *file = NULL;
+
+    file = fopen_secure(make_path(filename, ".bin"), "wb");
+
+    fwrite(profili, sizeof(int), 1, file);
+    scrivi_giocatori(file, *profili, players);
+    fwrite(game, sizeof(int), 1, file);
+
+    fclose(file);
+}
+
+
+
+
+
+
+
+void add_file(char *newname) {
+
+    FILE *file = NULL;
+    int many, n;
+    char **filenames = NULL;
+
+    file = fopen_secure(make_path("savegame_files", ".bin"), "rb");
+
+    fread(&many, sizeof(int), 1, file);
+
+    filenames = list_files(file, many);
+
+    fclose(file);
+
+    for(int d = 0; d < many; d++) {
+        printf("\n%s", filenames[d]);
+    }
+
+
+
+    many++;
+
+
+    file = fopen_secure(make_path("savegame_files", ".bin"), "wb");
+
+    fwrite(&many, sizeof(int), 1, file);
+
+    for(n = 0; n < many - 1; n++) {
+        fwrite(filenames[n], sizeof(char), 32, file);
+    }
+    fwrite(newname, sizeof(char), 32, file);
+
+    fclose(file);
+
+
+
+    free(filenames);
+}
+
+
+
+
+
+
+void restore() {
+
+    FILE *file = NULL;
+    int i, num = 4;
+
+    file = fopen_secure(make_path("savegame_files", ".bin"), "wb");
+
+    fwrite(&num, sizeof(int), 1, file);
+    for(i = 0; i < num; i++) {
+        fwrite(&names[i], sizeof(char), 32, file);
+    }
+
+    fclose(file);
 }
 
 

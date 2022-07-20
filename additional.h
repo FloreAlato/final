@@ -17,25 +17,7 @@
 
 
 
-void write_file() {
+void write_file(char name[32]) {
 
     FILE *file = NULL;
-
-    char names[4][32] = {
-            "savegame_Nplayeres_game",
-            "savegame_Nplayeres_noGame",
-            "savegame_twoPlayers_game",
-            "savegame_twoPlayers_noGame"
-    };
-
-    file = fopen("../cmake-build-debug/Save_Files/savegame_files.bin", "wb");
-    if(file == NULL) {
-        printf("\n\nERRORE! Impossibile aprire file!");
-        exit(-1);
-    }
-
-    //
-
-
-    fclose(file);
 }

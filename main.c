@@ -1,11 +1,12 @@
 #include "file.h"
-
-
-void scrematura(Elenco *);
+#include "additional.h"
 
 
 
 int main() {
+
+    //restore();
+    //add_file("Dai_Riproviamo");
 
 
 
@@ -134,8 +135,8 @@ int main() {
         switch(prosegui) {
             case 1:
                 // salva la partita in un file senza gioco
-                printf("");
-                //finire
+                save(&numero_profili, giocatori_veri, false, "savegame_testing");
+                add_file("savegame_testing");
                 break;
             case 2:
                 printf("\nALLORA COMINCIAMO!!!!!\n");
@@ -157,15 +158,9 @@ int main() {
 
         printf("\nQuesti sono i file disponibili:\n");
 
-        // i files tra cui scegliere sono salvati in un file apposito
-        // vi si accede grazie alla funzione make_path()
-        // make_path() -> file.h
+        // rifare
 
-        file = fopen(make_path("savegame_files", ".bin"), "rb");
-        if(file == NULL) {
-            printf("\n\nERRORE! Impossibile aprire file!");
-            exit(-1);
-        }
+        file = fopen_secure(make_path("savegame_files", ".bin"), "rb");
 
         // il programma legge quanti file sono disponibili
         // e usa questo dato per allocare la matrice con i nomi da mostrare all'utente
@@ -174,24 +169,9 @@ int main() {
 
         fread(&numero_files, sizeof(int), 1, file);
 
-        files = (char **) calloc(sizeof(char *), numero_files);
-        if(files == NULL) {
-            printf("\n\nERRORE! Allocazione fallita!");
-            exit(-1);
-        }
+        // rifare
 
-        // essendo una matrice, l'allocazione avviene in due parti, usando il seguente ciclo for
-        // all'interno di questo avviene anche la lettura dei nomi dal file
-
-        for(k = 0; k < numero_files; k++) {
-            files[k] = (char *) calloc(sizeof(char), 32);
-            if(files[k] == NULL) {
-                printf("\n\nERRORE! Allocazione fallita!");
-                exit(-1);
-            }
-
-            fread(files[k], sizeof(char), 32, file);
-        }
+        files = list_files(file, numero_files);
 
         fclose(file);
 
@@ -209,13 +189,9 @@ int main() {
 
         scelta = get_int("\n\n[Tu]: ", 0, numero_files - 1);
 
-        // viene aperto il file scelto grazie a make_path() e sono caricati i suoi dati
+        // rifare
 
-        file = fopen(make_path(files[scelta], ".bin"), "rb");
-        if(file == NULL) {
-            printf("\n\nERRORE! Impossibile aprire file!");
-            exit(-1);
-        }
+        file = fopen_secure(make_path(files[scelta], ".bin"), "rb");
 
         // sfruttando la struttura del file, il programma legge il numero_profili
         // poi alloca l'array che già conosciamo dalla sezione precedente
