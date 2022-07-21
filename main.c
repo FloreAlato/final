@@ -2,6 +2,9 @@
 #include "additional.h"
 
 
+Elenco *scrematura(Elenco *);
+
+
 
 int main() {
 
@@ -20,7 +23,7 @@ int main() {
 
     bool nuovo, esistente, scelto, game = false;
     int scelta, prosegui;
-    char nome[30];
+    char nome[32];
     char opzioni[2][10] = {"carica", "inserisci"};
     char scelte[4][10] = {"continua", "salva", "inizia", "esci"};
     char **files = NULL;
@@ -29,10 +32,6 @@ int main() {
 
     int id, segnaposto;
     Elenco *prov = NULL;
-
-    // variabili utili se la partita è iniziata
-    int *indici = NULL;
-    int *vivi = NULL;
 
 
 
@@ -134,9 +133,15 @@ int main() {
 
         switch(prosegui) {
             case 1:
+                printf("\nInserisci il nome del file nel quale vorresti salvare i profili");
+                printf("\n(ATTENZIONE! Se inserirai il nome di un file esistente, questo verrà sovrascritto!)");
+
+                printf("\n\n[Tu]: ");
+                scanf(" %s", nome);
+
                 // salva la partita in un file senza gioco
-                save(&numero_profili, giocatori_veri, false, "savegame_testing");
-                add_file("savegame_testing");
+                save(&numero_profili, giocatori_veri, false, nome);
+                add_file(nome);
                 break;
             case 2:
                 printf("\nALLORA COMINCIAMO!!!!!\n");
@@ -406,3 +411,16 @@ int main() {
 
 
 
+
+
+
+
+
+Elenco *scrematura(Elenco *giocatori) {
+
+    // prendi l'elenco in entrata e calcola le nuove dimensioni
+    // dividi in gruppetti casuali
+    // calcola i vincitori con i giochi (ricorda frontman)
+    // riunisci i rimanenti in un gruppo solo
+    // ritorna questo gruppo
+}

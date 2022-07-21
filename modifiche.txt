@@ -1,1 +1,3 @@
-scrivere la parte del salvataggio dei file, il resto è apposto
+
+
+debuggare l'assegnazione degli id, a volte fa il paxxerello con get_int
