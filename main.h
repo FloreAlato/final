@@ -220,13 +220,15 @@ void print_player(Elenco player) {
     if(player.p != NULL) {
         printf("%s", player.p->nome);
     } else {
-        // converti in stringa
-        int powers[3] = {100, 10, 1};
-        int num = player.id;
-        printf("Giocatore ");
-        for(int i = 0; i < 3; i++) {
-            printf("%d", num / powers[i]);
-            num %= powers[i];
+        if(player.id >= 0) {
+            // converti in stringa
+            int powers[3] = {100, 10, 1};
+            int num = player.id;
+            printf("Giocatore ");
+            for(int i = 0; i < 3; i++) {
+                printf("%d", num / powers[i]);
+                num %= powers[i];
+            }
         }
     }
 }
@@ -281,4 +283,6 @@ Elenco *componi_elenco(int numero_giocatori) {
 }
 
 
-// gruppi
+int rand_int(int min, int max) {
+    return (rand() % (max - min + 1)) + min;
+}

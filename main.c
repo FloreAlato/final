@@ -6,7 +6,7 @@ void scrematura(int, Elenco *);
 
 
 //TESTING
-int i, j, k;
+int i, j, k, counter;
 
 int numero_giocatori, numero_giocatori_veri;
 Elenco *giocatori = NULL;
@@ -26,6 +26,7 @@ int id, segnaposto;
 Elenco *prov = NULL;
 
 Elenco **groups = NULL;
+Elenco *new = NULL;
 int target, group_size;
 
 
@@ -408,6 +409,16 @@ int main() {
 
 void scrematura(int totale, Elenco *participants) {
 
+    // nuovo elenco
+    new = (Elenco *) calloc(totale, sizeof(Elenco));
+    if(new == NULL) {
+        printf("ERRORE! Allocazione fallita!");
+        exit(-1);
+    }
+    for(k = 0; k < totale; k++) {
+        new[k] = participants[k];
+    }
+
     // prendi l'elenco in entrata e calcola le nuove dimensioni
     // dividi in gruppetti casuali
     // calcola i vincitori con i giochi (ricorda frontman)
@@ -426,36 +437,63 @@ void scrematura(int totale, Elenco *participants) {
     // dividi in gruppetti
     group_size = totale / target;
 
-    groups = (Elenco **) calloc(sizeof(Elenco *), target);
+    groups = (Elenco **) calloc(target, sizeof(Elenco *));
     if(groups == NULL) {
         printf("\n\nERRORE! Allocazione fallita!");
         exit(-1);
     }
     for(i = 0; i < target; i++) {
-        groups[i] = (Elenco *) calloc(sizeof(Elenco), group_size + 1);
+        groups[i] = (Elenco *) calloc(group_size + 1, sizeof(Elenco));
         if(groups[i] == NULL) {
             printf("\n\nERRORE! Allocazione fallita!");
             exit(-1);
         }
     }
 
-
-    // riempi i gruppi con giocatori a caso, ma mettili in ordine di indice
-
-    // metti i primi (target) elementi del gruppo principale nei primi posti di groups
-    // metti i secondi elementi e i successivi allo stesso modo, scambiando per tenetli in ordine crescente
-
     // riempi
+    // target -> numero di gruppi, nuovo numero di giocatori totali
+    // group_size -> numero di giocatori per ogni gruppo
+    // groups[target][group_size + 1]
 
+    // riempi i primi posti di ogni gruppetto
+    // riempi i secondi posti di ogni qruppetto
+    // continua fino alla fine degli elementi
+
+    // randomizza (fatto, aggiungi commenti)
+
+
+    counter = totale - 1;
+    for(i = 0; i < group_size + 1; i++) {
+        for(j = 0; j < target; j++, counter--) {
+            if(counter >= 0) {
+                segnaposto = rand_int(0, counter);
+                groups[j][i] = new[segnaposto];
+                new[segnaposto] = new[counter];
+            } else {
+                groups[j][i].id = -1;
+            }
+        }
+    }
+
+
+
+    // riscrivere in modo ordinato
     printf("\n\n\nGruppi: ");
     for(int d = 0; d < target; d++) {
         printf("\n\n%do gruppo:\n", d);
-        for(int t = 0; t < group_size; t++) {
+        for(int t = 0; t < group_size + 1; t++) {
             print_player(groups[d][t]);
             printf(" ");
         }
     }
 
 
+
+
+    // gioca a indovina il numero e componi l'elenco da ritornare
+
+
+
+    free(new);
     free(groups);
 }

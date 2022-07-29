@@ -20,7 +20,7 @@ int indovina_il_numero(Elenco *gruppetto, int size) {
 
     printf("\n\nSI COMINCIA! Osa scegliero' un numero da 1 a 999 e tutti voi dovrete indovinarlo!");
 
-    numero = (rand() % 999) + 1;
+    numero = rand_int(0, 999);
 
     for(d = 0; d < size; d++) {
 
@@ -29,7 +29,7 @@ int indovina_il_numero(Elenco *gruppetto, int size) {
             scelta = get_int("\n[Tu]: ", 1, 999);
         } else {
 
-            scelta = (rand() % 999) + 1;
+            scelta = rand_int(0, 999);
 
             printf("[Giocatore ");
             print_player(gruppetto[d]);
