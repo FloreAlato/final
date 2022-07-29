@@ -162,9 +162,7 @@ void add_file(char *newname) {
 
     fclose(file);
 
-    for(int d = 0; d < many; d++) {
-        printf("\n%s", filenames[d]);
-    }
+
 
 
 

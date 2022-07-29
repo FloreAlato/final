@@ -223,6 +223,7 @@ void print_player(Elenco player) {
         // converti in stringa
         int powers[3] = {100, 10, 1};
         int num = player.id;
+        printf("Giocatore ");
         for(int i = 0; i < 3; i++) {
             printf("%d", num / powers[i]);
             num %= powers[i];
@@ -278,3 +279,6 @@ Elenco *componi_elenco(int numero_giocatori) {
 
     return players;
 }
+
+
+// gruppi

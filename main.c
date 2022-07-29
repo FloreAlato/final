@@ -1,37 +1,41 @@
-#include "file.h"
+#include "indovina_il_numero.h"
 #include "additional.h"
 
 
-Elenco *scrematura(Elenco *);
+void scrematura(int, Elenco *);
+
+
+//TESTING
+int i, j, k;
+
+int numero_giocatori, numero_giocatori_veri;
+Elenco *giocatori = NULL;
+ProfiloGiocatore *giocatori_veri;
+FILE *file = NULL;
+
+bool nuovo, esistente, scelto, game = false;
+int scelta, prosegui;
+char nome[32];
+char opzioni[2][10] = {"carica", "inserisci"};
+char scelte[4][10] = {"continua", "salva", "inizia", "esci"};
+char **files = NULL;
+int numero_files;
+int numero_profili;
+
+int id, segnaposto;
+Elenco *prov = NULL;
+
+Elenco **groups = NULL;
+int target, group_size;
 
 
 
 int main() {
 
+
     //restore();
     //add_file("Dai_Riproviamo");
-
-
-
-    //TESTING
-    int i, j, k;
-
-    int numero_giocatori, numero_giocatori_veri;
-    Elenco *giocatori = NULL;
-    ProfiloGiocatore *giocatori_veri;
-    FILE *file = NULL;
-
-    bool nuovo, esistente, scelto, game = false;
-    int scelta, prosegui;
-    char nome[32];
-    char opzioni[2][10] = {"carica", "inserisci"};
-    char scelte[4][10] = {"continua", "salva", "inizia", "esci"};
-    char **files = NULL;
-    int numero_files;
-    int numero_profili;
-
-    int id, segnaposto;
-    Elenco *prov = NULL;
+    srand(time(NULL));
 
 
 
@@ -368,21 +372,6 @@ int main() {
 
 
 
-    /*open file template
-    file = fopen("", "");
-    if(file == NULL) {
-        printf("\n\nERRORE! Impossibile aprire file!");
-        exit(-1);
-    }
-
-
-    fclose(file);*/
-
-
-
-
-
-
 
 
     /*ProfiloGiocatore man = {
@@ -398,6 +387,7 @@ int main() {
 
 
 
+    scrematura(numero_giocatori, &giocatori[0]);
 
 
 
@@ -416,11 +406,56 @@ int main() {
 
 
 
-Elenco *scrematura(Elenco *giocatori) {
+void scrematura(int totale, Elenco *participants) {
 
     // prendi l'elenco in entrata e calcola le nuove dimensioni
     // dividi in gruppetti casuali
     // calcola i vincitori con i giochi (ricorda frontman)
     // riunisci i rimanenti in un gruppo solo
     // ritorna questo gruppo
+
+    // trasforma il numero
+    i = 0;
+    while(potenza(2, i) < totale) {
+        i++;
+    }
+
+    target = potenza(2, i - 2);
+    printf("\n\n\nTroppi! Facciamo %d?", target);
+
+    // dividi in gruppetti
+    group_size = totale / target;
+
+    groups = (Elenco **) calloc(sizeof(Elenco *), target);
+    if(groups == NULL) {
+        printf("\n\nERRORE! Allocazione fallita!");
+        exit(-1);
+    }
+    for(i = 0; i < target; i++) {
+        groups[i] = (Elenco *) calloc(sizeof(Elenco), group_size + 1);
+        if(groups[i] == NULL) {
+            printf("\n\nERRORE! Allocazione fallita!");
+            exit(-1);
+        }
+    }
+
+
+    // riempi i gruppi con giocatori a caso, ma mettili in ordine di indice
+
+    // metti i primi (target) elementi del gruppo principale nei primi posti di groups
+    // metti i secondi elementi e i successivi allo stesso modo, scambiando per tenetli in ordine crescente
+
+    // riempi
+
+    printf("\n\n\nGruppi: ");
+    for(int d = 0; d < target; d++) {
+        printf("\n\n%do gruppo:\n", d);
+        for(int t = 0; t < group_size; t++) {
+            print_player(groups[d][t]);
+            printf(" ");
+        }
+    }
+
+
+    free(groups);
 }
