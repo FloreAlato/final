@@ -28,6 +28,8 @@ Elenco *prov = NULL;
 Elenco **groups = NULL;
 Elenco *new = NULL;
 int target, group_size;
+int width, perm_width;
+bool cp = false;
 
 
 
@@ -477,7 +479,7 @@ void scrematura(int totale, Elenco *participants) {
 
 
 
-    // riscrivere in modo ordinato
+    /* riscrivere in modo ordinato
     printf("\n\n\nGruppi: ");
     for(int d = 0; d < target; d++) {
         printf("\n\n%do gruppo:\n", d);
@@ -485,12 +487,57 @@ void scrematura(int totale, Elenco *participants) {
             print_player(groups[d][t]);
             printf(" ");
         }
+    }*/
+
+    /*printf("\n\n\n");
+    j = 0;
+    while(j < target) {
+        printf("%do gruppo:          ", j);
+        if(j % 5 == 0 && j != 0) {
+            for(k = 0; k < group_size; k++) {
+                for(i = 0; i <= 5; i++) {
+                    if(is_player(groups[i][k])) {
+                        printf("%s13", groups[i][k].p->nome);
+                    } else {
+                        print_player(groups[i][k]);
+                    }
+                    printf("       ");
+                }
+            }
+            printf("\n\n");
+        }
+        j++;
+    }*/
+
+
+
+
+    // questa versione stampa solo i primi (width) gruppi
+
+    width = target / 2;
+    k = 0, j = 0;
+
+    printf("\n\n\n");
+
+    while(k < width) {
+        printf("%do gruppo:        ", k + 1);
+        k++;
+    }
+    printf("\n");
+    for(i = 0; i < group_size; i++) {
+        for(j = 0; j < width; j++) {
+            if(k < target) {
+                print_player(groups[j][i]);
+                printf("     ");
+            }
+        }
+        printf("\n");
     }
 
 
 
-
     // gioca a indovina il numero e componi l'elenco da ritornare
+
 
 
 
