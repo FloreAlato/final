@@ -6,7 +6,7 @@ void scrematura(int, Elenco *);
 
 
 //TESTING
-int i, j, k, counter;
+int i, j, k, l, counter;
 
 int numero_giocatori, numero_giocatori_veri;
 Elenco *giocatori = NULL;
@@ -28,8 +28,7 @@ Elenco *prov = NULL;
 Elenco **groups = NULL;
 Elenco *new = NULL;
 int target, group_size;
-int width, perm_width;
-bool cp = false;
+int width, width_save, divv;
 
 
 
@@ -479,64 +478,26 @@ void scrematura(int totale, Elenco *participants) {
 
 
 
-    /* riscrivere in modo ordinato
-    printf("\n\n\nGruppi: ");
-    for(int d = 0; d < target; d++) {
-        printf("\n\n%do gruppo:\n", d);
-        for(int t = 0; t < group_size + 1; t++) {
-            print_player(groups[d][t]);
+
+    // migliorare, stampa solo una lista dei gruppi
+    // sarebbe meglio se stampasse un elenco ordinato
+
+
+    for(i = 0; i < target; i++) {
+        printf("\n%do gruppo: ( ", i + 1);
+        for(j = 0; j <= group_size; j++) {
+            print_player(groups[i][j]);
             printf(" ");
         }
-    }*/
-
-    /*printf("\n\n\n");
-    j = 0;
-    while(j < target) {
-        printf("%do gruppo:          ", j);
-        if(j % 5 == 0 && j != 0) {
-            for(k = 0; k < group_size; k++) {
-                for(i = 0; i <= 5; i++) {
-                    if(is_player(groups[i][k])) {
-                        printf("%s13", groups[i][k].p->nome);
-                    } else {
-                        print_player(groups[i][k]);
-                    }
-                    printf("       ");
-                }
-            }
-            printf("\n\n");
-        }
-        j++;
-    }*/
-
-
-
-
-    // questa versione stampa solo i primi (width) gruppi
-
-    width = target / 2;
-    k = 0, j = 0;
-
-    printf("\n\n\n");
-
-    while(k < width) {
-        printf("%do gruppo:        ", k + 1);
-        k++;
-    }
-    printf("\n");
-    for(i = 0; i < group_size; i++) {
-        for(j = 0; j < width; j++) {
-            if(k < target) {
-                print_player(groups[j][i]);
-                printf("     ");
-            }
-        }
-        printf("\n");
+        printf(")");
     }
 
 
 
     // gioca a indovina il numero e componi l'elenco da ritornare
+
+
+
 
 
 
