@@ -286,3 +286,19 @@ Elenco *componi_elenco(int numero_giocatori) {
 int rand_int(int min, int max) {
     return (rand() % (max - min + 1)) + min;
 }
+
+
+
+
+
+
+void wait_print(char *message) {
+    printf("%s", message);
+    printf("\n\n---[PRESS ENTER TO CONTINUE]---");
+    getchar();
+}
+
+void wait() {
+    printf("\n\n---[PRESS ENTER TO CONTINUE]---");
+    getchar();
+}

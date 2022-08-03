@@ -16,37 +16,41 @@
 
 int indovina_il_numero(Elenco *gruppetto, int size) {
 
-    int numero, d, scelta;
+    int min = 0, max = 999;
+    int numero, scelta, i;
 
-    printf("\n\nSI COMINCIA! Osa scegliero' un numero da 1 a 999 e tutti voi dovrete indovinarlo!");
+    printf("\n\nSI COMINCIA! Ora scegliero' un numero da 1 a 999 e tutti voi dovrete indovinarlo!");
 
-    numero = rand_int(0, 999);
+    numero = rand_int(min, max);
 
-    for(d = 0; d < size; d++) {
+    while(true) {
+        for(i = 0; i < size; i++) {
+            if(is_player(gruppetto[i])) {
+                printf("\n[");
+                print_player(gruppetto[i]);
+                scelta = get_int("]: ", 0, 999);
+                getchar();
+            } else {
+                printf("\n[");
+                print_player(gruppetto[i]);
+                scelta = rand_int(min, max);
+                printf("]: %d", scelta);
+            }
 
-        if(is_player(gruppetto[d])) {
-
-            scelta = get_int("\n[Tu]: ", 1, 999);
-        } else {
-
-            scelta = rand_int(0, 999);
-
-            printf("[Giocatore ");
-            print_player(gruppetto[d]);
-            printf("]: %d", scelta);
-        }
-
-        if(scelta == numero) {
-            printf("\n\nCORRETTO!!!! Hai vinto questa partita!");
-            return gruppetto[d].id;
-        } else if(scelta > numero) {
-            printf("\nDi meno!");
-        } else {
-            printf("\nDi piu'!");
+            if(scelta > numero) {
+                printf("\n\nTroppo grande!\n");
+                max = scelta;
+                wait();
+            } else if(scelta < numero) {
+                printf("\n\nTroppo piccolo!\n");
+                min = scelta;
+                wait();
+            } else {
+                printf("\n\nHai vinto!!!");
+                return i;
+            }
         }
     }
-
-    return 0;
 }
 
 

@@ -30,9 +30,26 @@ Elenco *new = NULL;
 int target, group_size;
 int width, width_save, divv;
 
+int length;
+
+bool pla = false;
+
 
 
 int main() {
+
+
+
+
+
+    // TESTING
+
+
+
+
+
+
+
 
 
     //restore();
@@ -482,23 +499,71 @@ void scrematura(int totale, Elenco *participants) {
     // migliorare, stampa solo una lista dei gruppi
     // sarebbe meglio se stampasse un elenco ordinato
 
+    printf("\n\n\n");
 
-    for(i = 0; i < target; i++) {
-        printf("\n%do gruppo: ( ", i + 1);
-        for(j = 0; j <= group_size; j++) {
-            print_player(groups[i][j]);
+
+    width = 5;
+    i = 0, segnaposto = 0;
+    width_save = width;
+
+
+    while(i < target) {
+        if(i != 0 && i % width == 0) {
+            printf("\n");
+
+            // stampa i giocatori
+            printf("stampa da %d a %d", segnaposto, width);
+            segnaposto = width;
+            width += width_save;
+
+            printf("\n\n");
+        }
+        printf("%do gruppo:          ", i + 1);
+        if(i < 9) {
+            printf("  ");
+        } else if(i < 99) {
             printf(" ");
         }
-        printf(")");
+
+        i++;
     }
 
 
 
-    // gioca a indovina il numero e componi l'elenco da ritornare
+    /* gioca a indovina il numero e componi l'elenco da ritornare
 
 
+    // controlla la fine
+    // controlla se ci sono giocatori
+    for(i = 0; i < target; i++) {
+
+        pla = false;
+
+        printf("\n\nSe la giocano:\n");
+        for(j = 0; j <= group_size; j++) {
+            print_player(groups[i][j]);
+            printf("\n");
+        }
+        printf("\nCominciamo!\n\n");
 
 
+        // check for length
+        if(groups[i][group_size].id == -1) {
+            length = group_size;
+        } else {
+            length = group_size - 1;
+        }
+
+        // check for players
+        for(j = 0; j < length; j++) {
+            if(is_player(groups[i][j])) {
+                pla = true;
+                break;
+            }
+        }
+
+        // play
+    }*/
 
 
 
