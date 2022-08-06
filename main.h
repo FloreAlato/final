@@ -302,3 +302,17 @@ void wait() {
     printf("\n\n---[PRESS ENTER TO CONTINUE]---");
     getchar();
 }
+
+
+
+void stampa(Elenco **groups, int size, int start, int finish) {
+
+    printf("\n");
+    for(int j = 0; j <= size; j++) {
+        for(int k = start; k < finish; k++) {
+            print_player(groups[k][j]);
+            printf("         ");
+        }
+        printf("\n");
+    }
+}

@@ -27,12 +27,11 @@ Elenco *prov = NULL;
 
 Elenco **groups = NULL;
 Elenco *new = NULL;
+bool *pla = NULL;
 int target, group_size;
-int width, width_save, divv;
+int width, width_save;
 
 int length;
-
-bool pla = false;
 
 
 
@@ -392,21 +391,12 @@ int main() {
 
 
 
-
-    /*ProfiloGiocatore man = {
-            3,
-            "Mario",
-            4,
-            5,
-            6,
-            7,
-            8
-    };*/
-
-
-
-
     scrematura(numero_giocatori, &giocatori[0]);
+
+
+
+
+
 
 
 
@@ -479,13 +469,28 @@ void scrematura(int totale, Elenco *participants) {
 
     // randomizza (fatto, aggiungi commenti)
 
+    pla = (bool *) calloc(target, sizeof(bool));
+    if(pla == NULL) {
+        printf("\n\nERRORE! Allocazione fallita!\n\n");
+        exit(-1);
+    }
+    for(i = 0; i < target; i++) {
+        pla[i] = false;
+    }
+
 
     counter = totale - 1;
-    for(i = 0; i < group_size + 1; i++) {
+    for(i = 0; i <= group_size; i++) {
         for(j = 0; j < target; j++, counter--) {
             if(counter >= 0) {
                 segnaposto = rand_int(0, counter);
                 groups[j][i] = new[segnaposto];
+
+                // salva i gruppi che contengono giocatori
+                if(is_player(groups[j][i])) {
+                    pla[j] = true;
+                }
+
                 new[segnaposto] = new[counter];
             } else {
                 groups[j][i].id = -1;
@@ -495,9 +500,19 @@ void scrematura(int totale, Elenco *participants) {
 
 
 
+    for(i = 0; i < target; i++) {
+        printf("\n%do gruppo: ", i + 1);
+        for(j = 0; j <= group_size; j++) {
+            print_player(groups[i][j]);
+            printf("    ");
+        }
+    }
 
-    // migliorare, stampa solo una lista dei gruppi
-    // sarebbe meglio se stampasse un elenco ordinato
+
+
+
+    // stampa un elenco ordinato
+    // migliorare per i nomi dei giocatori
 
     printf("\n\n\n");
 
@@ -509,10 +524,10 @@ void scrematura(int totale, Elenco *participants) {
 
     while(i < target) {
         if(i != 0 && i % width == 0) {
-            printf("\n");
 
-            // stampa i giocatori
-            printf("stampa da %d a %d", segnaposto, width);
+            // stampa i gruppetti da segnaposto a width
+            stampa(&groups[0], group_size, segnaposto, width);
+
             segnaposto = width;
             width += width_save;
 
@@ -527,43 +542,22 @@ void scrematura(int totale, Elenco *participants) {
 
         i++;
     }
+    stampa(&groups[0], group_size, segnaposto, target);
 
 
 
-    /* gioca a indovina il numero e componi l'elenco da ritornare
+
+
+
+    // gioca a indovina il numero e componi l'elenco da ritornare
 
 
     // controlla la fine
     // controlla se ci sono giocatori
     for(i = 0; i < target; i++) {
 
-        pla = false;
-
-        printf("\n\nSe la giocano:\n");
-        for(j = 0; j <= group_size; j++) {
-            print_player(groups[i][j]);
-            printf("\n");
-        }
-        printf("\nCominciamo!\n\n");
-
-
-        // check for length
-        if(groups[i][group_size].id == -1) {
-            length = group_size;
-        } else {
-            length = group_size - 1;
-        }
-
-        // check for players
-        for(j = 0; j < length; j++) {
-            if(is_player(groups[i][j])) {
-                pla = true;
-                break;
-            }
-        }
-
-        // play
-    }*/
+        // gioca
+    }
 
 
 
