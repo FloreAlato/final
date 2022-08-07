@@ -553,25 +553,39 @@ void scrematura(int totale, Elenco *participants) {
 
         if(pla[i] == true || i == target - 1) {
 
-            if(segnaposto != i) {
-                printf("\nI gruppi da %d a %d hanno giocato, e i risultati sono:\n", segnaposto + 1, i);
-            } else {
-                printf("Il %do gruppo ha giocato, e il risultato e':\n", i);
+            if(i > 0) {
+                printf("\nI seguenti gruppi hanno ottenuto i seguenti risultati:\n");
             }
 
+            // stampa i precedenti
             for(j = segnaposto; j < i; j++) {
+                printf("%do gruppo: ", j);
                 print_player(new[j]);
                 printf("\n");
             }
 
             if(pla[i] == true) {
 
-                printf("\n\nSI GIOCAAAAA\n\n");
+                printf("\n\nSI GIOCAAA\n\n");
+
+                // si gioca qui
+                new[i].id = 11;
+
                 segnaposto = i + 1;
+
+            } else {
+                printf("%do gruppo: ", i);
+                print_player(new[i]);
             }
+
+            printf("\n");
         }
 
         i++;
+    }
+
+    for(k = 0; k < target; k++) {
+        printf("%d\n", new[k].id);
     }
 
 
