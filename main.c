@@ -29,9 +29,6 @@ Elenco **groups = NULL;
 Elenco *new = NULL;
 bool *pla = NULL;
 int target, group_size;
-int width, width_save;
-
-int length;
 
 
 
@@ -512,51 +509,69 @@ void scrematura(int totale, Elenco *participants) {
 
 
     // stampa un elenco ordinato
-    // migliorare per i nomi dei giocatori
+    // migliorare per i nomi dei giocatori (fatto!!)
 
     printf("\n\n\n");
 
+    // stampa i gruppetti in modo ordinato
 
-    width = 5;
-    i = 0, segnaposto = 0;
-    width_save = width;
-
-
-    while(i < target) {
-        if(i != 0 && i % width == 0) {
-
-            // stampa i gruppetti da segnaposto a width
-            stampa(&groups[0], group_size, segnaposto, width);
-
-            segnaposto = width;
-            width += width_save;
-
-            printf("\n\n");
-        }
-        printf("%do gruppo:          ", i + 1);
-        if(i < 9) {
-            printf("  ");
-        } else if(i < 99) {
-            printf(" ");
-        }
-
-        i++;
-    }
-    stampa(&groups[0], group_size, segnaposto, target);
+    stampa_gruppetti(&groups[0], target, group_size, 5);
 
 
+    printf("\n\n");
 
 
 
 
     // gioca a indovina il numero e componi l'elenco da ritornare
 
+    // alloca elenco
+    new = (Elenco *) realloc(new, sizeof(Elenco) * target);
+    if(new == NULL) {
+        printf("ERRORE! Rillocazione fallita!");
+        exit(-1);
+    }
+
 
     // controlla la fine
     // controlla se ci sono giocatori
-    for(i = 0; i < target; i++) {
+    i = 0, segnaposto = 0;
+    while(i < target) {
 
-        // gioca
+        // controlla lunghezza
+        if(pla[i] == false) {
+
+            if(groups[i][group_size].id == -1) {
+                new[i] = groups[i][rand_int(0, group_size - 1)];
+            } else {
+                new[i] = groups[i][rand_int(0, group_size)];
+            }
+
+        }
+
+        // correggere gli errori
+
+        if(pla[i] == true || i == target - 1) {
+
+            if(segnaposto != i) {
+                printf("\nI gruppi da %d a %d hanno giocato, e i risultati sono:\n", segnaposto + 1, i);
+            } else {
+                printf("Il %do gruppo ha giocato, e il risultato e':\n", i);
+            }
+
+            for(j = segnaposto; j < i; j++) {
+                print_player(new[j]);
+                printf("\n");
+            }
+
+            if(pla[i] == true) {
+
+                printf("\n\nSI GIOCAAAAA\n\n");
+                segnaposto = i + 1;
+            }
+        }
+
+        i++;
     }
 
 
