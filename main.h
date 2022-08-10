@@ -365,3 +365,8 @@ void stampa_gruppetti(Elenco **groups, int target, int size, int width) {
     }
     stampa(&groups[0], size, segnaposto, target);
 }
+
+
+void page_down() {
+    printf("\n\n\n");
+}

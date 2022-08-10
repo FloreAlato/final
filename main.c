@@ -40,6 +40,67 @@ int main() {
 
     // TESTING
 
+    srand(time(NULL));
+
+    // code
+    ProfiloGiocatore pop[2] = {
+
+            {13,
+             "Luigi Il Bello",
+             0,
+             0,
+             0,
+             0,
+             0},
+
+             {
+                15,
+                "Davide Cartello",
+                0,
+                0,
+                0,
+                0,
+                0
+            }
+    };
+
+    Elenco gam[4] = {
+            {
+                13,
+                true,
+                &pop[0]
+            },
+            {
+                14,
+                true,
+                NULL
+            },
+            {
+                15,
+                true,
+                &pop[1]
+            },
+            {
+                16,
+                true,
+                NULL
+            }
+    };
+
+    printf("\n\nSi gioca\n\n");
+
+
+    int d = indovina_il_numero(&gam[0], 4);
+
+
+    // frontman
+    // da scrivere
+
+    printf("\n\nVince ");
+    print_player(gam[d]);
+
+    return 0;
+
 
 
 
@@ -553,7 +614,7 @@ void scrematura(int totale, Elenco *participants) {
 
         if(pla[i] == true || i == target - 1) {
 
-            if(i > 0) {
+            if(i > 0 && segnaposto != i) {
                 printf("\nI seguenti gruppi hanno ottenuto i seguenti risultati:\n");
             }
 
@@ -584,6 +645,7 @@ void scrematura(int totale, Elenco *participants) {
         i++;
     }
 
+    printf("\n\n");
     for(k = 0; k < target; k++) {
         printf("%d\n", new[k].id);
     }
