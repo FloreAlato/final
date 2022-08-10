@@ -2,7 +2,7 @@
 #include "additional.h"
 
 
-void scrematura(int, Elenco *);
+Elenco *scrematura(int, Elenco *);
 
 
 //TESTING
@@ -28,7 +28,7 @@ Elenco *prov = NULL;
 Elenco **groups = NULL;
 Elenco *new = NULL;
 bool *pla = NULL;
-int target, group_size;
+int target, group_size, size, winner;
 
 
 
@@ -40,7 +40,7 @@ int main() {
 
     // TESTING
 
-    srand(time(NULL));
+    /*srand(time(NULL));
 
     // code
     ProfiloGiocatore pop[2] = {
@@ -87,19 +87,7 @@ int main() {
             }
     };
 
-    printf("\n\nSi gioca\n\n");
-
-
-    int d = indovina_il_numero(&gam[0], 4);
-
-
-    // frontman
-    // da scrivere
-
-    printf("\n\nVince ");
-    print_player(gam[d]);
-
-    return 0;
+    return 0;*/
 
 
 
@@ -447,13 +435,15 @@ int main() {
 
 
 
-
-
-    scrematura(numero_giocatori, &giocatori[0]);
-
+    Elenco *nuov = scrematura(numero_giocatori, &giocatori[0]);
 
 
 
+    printf("\n\n");
+    for(k = 0; k < target; k++) {
+        print_player(nuov[k]);
+        printf("\n");
+    }
 
 
 
@@ -473,7 +463,7 @@ int main() {
 
 
 
-void scrematura(int totale, Elenco *participants) {
+Elenco *scrematura(int totale, Elenco *participants) {
 
     // nuovo elenco
     new = (Elenco *) calloc(totale, sizeof(Elenco));
@@ -577,6 +567,8 @@ void scrematura(int totale, Elenco *participants) {
     // stampa i gruppetti in modo ordinato
 
     stampa_gruppetti(&groups[0], target, group_size, 5);
+    getchar();
+    getchar();
 
 
     printf("\n\n");
@@ -600,14 +592,15 @@ void scrematura(int totale, Elenco *participants) {
     while(i < target) {
 
         // controlla lunghezza
+        if(groups[i][group_size].id == -1) {
+            size = group_size - 1;
+        } else {
+            size = group_size;
+        }
+
+
         if(pla[i] == false) {
-
-            if(groups[i][group_size].id == -1) {
-                new[i] = groups[i][rand_int(0, group_size - 1)];
-            } else {
-                new[i] = groups[i][rand_int(0, group_size)];
-            }
-
+            new[i] = groups[i][rand_int(0, size)];
         }
 
         // correggere gli errori
@@ -624,13 +617,25 @@ void scrematura(int totale, Elenco *participants) {
                 print_player(new[j]);
                 printf("\n");
             }
+            getchar();
 
             if(pla[i] == true) {
 
-                printf("\n\nSI GIOCAAA\n\n");
+                printf("\n\nSI GIOCAAA");
 
-                // si gioca qui
-                new[i].id = 11;
+                printf("\n\n");
+
+                winner = indovina_il_numero(groups[i], size);
+
+                for(k = 0; k <= size; k++) {
+                    if(is_player(groups[i][k]) && strcmp(groups[i][k].p->nome, "Riccardo Scateni") == 0) {
+                        winner = k;
+                        break;
+                    }
+                }
+
+                new[i] = groups[i][winner];
+                getchar();
 
                 segnaposto = i + 1;
 
@@ -645,13 +650,9 @@ void scrematura(int totale, Elenco *participants) {
         i++;
     }
 
-    printf("\n\n");
-    for(k = 0; k < target; k++) {
-        printf("%d\n", new[k].id);
-    }
 
 
-
-    free(new);
     free(groups);
+
+    return new;
 }

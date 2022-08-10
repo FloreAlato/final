@@ -20,11 +20,11 @@ int indovina_il_numero(Elenco *gruppetto, int size) {
     int numero, scelta, i;
 
     printf("\n\nSI COMINCIA! Ora scegliero' un numero da 1 a 999 e tutti voi dovrete indovinarlo!\n\n");
-    for(i = 0; i < size - 1; i++) {
+    for(i = 0; i < size; i++) {
         print_player(gruppetto[i]);
         printf(" -> ");
     }
-    print_player(gruppetto[size - 1]);
+    print_player(gruppetto[size]);
     printf("\n\n");
 
     numero = rand_int(min, max);
@@ -33,7 +33,7 @@ int indovina_il_numero(Elenco *gruppetto, int size) {
     // code
     while(true) {
 
-        for(i = 0; i < size; i++) {
+        for(i = 0; i <= size; i++) {
 
             if(is_player(gruppetto[i])) {
                 // gioca
